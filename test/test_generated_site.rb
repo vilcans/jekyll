@@ -19,4 +19,9 @@ class TestGeneratedSite < Test::Unit::TestCase
     # confirm that the {{ post.content }} is rendered OK
     assert @index.include?('<p>This <em>is</em> cool</p>')
   end
+
+  def test_post_categories_in_category_test
+    category_test = File.read(File.join(dest_dir, 'category_test.html'))
+    assert category_test.include?('<div>foo</div>')
+  end
 end

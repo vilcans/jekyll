@@ -163,8 +163,8 @@ module Jekyll
         "date" => self.date,
         "id" => self.id,
         "topics" => self.topics,
-        "categories" => self.categories,
-        "content" => self.content }.deep_merge(self.data)
+        "content" => self.content,
+        "categories" => self.categories }.deep_merge(self.data)
     end
     
     def inspect
