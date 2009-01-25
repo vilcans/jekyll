@@ -33,4 +33,9 @@ class TestGeneratedSite < Test::Unit::TestCase
   def test_posts_directory_not_copied
     assert !File.exist?(File.join(dest_dir, '_posts'))
   end
+
+  def test_post_categories_in_category_test
+    category_test = File.read(File.join(dest_dir, 'category_test.html'))
+    assert category_test.include?('<div>foo</div>')
+  end
 end

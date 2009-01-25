@@ -40,8 +40,7 @@ module Jekyll
       end
     end
     
-    # Read all the files in <source>/_layouts except backup files
-    # (end with "~") into memory for later use.
+    # Read all the files in <source>/_layouts into memory for later use.
     #
     # Returns nothing
     def read_layouts
