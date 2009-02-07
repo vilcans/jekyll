@@ -2,7 +2,7 @@ module Jekyll
   
   class Site
     attr_accessor :source, :dest
-    attr_accessor :layouts, :posts, :categories
+    attr_accessor :layouts, :posts, :categories, :settings
     
     # Initialize the site
     #   +source+ is String path to the source directory containing
@@ -17,6 +17,7 @@ module Jekyll
       self.layouts = {}
       self.posts = []
       self.categories = Hash.new { |hash, key| hash[key] = Array.new }
+      self.read_settings
     end
     
     # Do the actual work of processing the site and generating the
@@ -27,6 +28,17 @@ module Jekyll
       self.read_layouts
       self.transform_pages
       self.write_posts
+    end
+
+    # read settings from _site.yaml
+    def read_settings
+      file = File.join(self.source, "_site.yaml")
+      if File.exist?(file)
+        self.settings = File.open(file) { |f| YAML::load(f) }
+      else
+        self.settings = {}
+      end
+      puts "Setting is now #{self.settings}"
     end
     
     # Read all the files in <source>/_layouts except backup files
@@ -155,12 +167,14 @@ module Jekyll
     #                     "categories" => [<Post>],
     #                     "topics" => [<Post>] }}
     def site_payload
-      {"site" => {
+      r = {"site" => self.settings.merge({
         "time" => Time.now, 
         "posts" => self.posts.sort { |a,b| b <=> a },
         "categories" => post_attr_hash('categories'),
         "topics" => post_attr_hash('topics')
-      }}
+      })}
+      puts "payload #{r}"
+      r
     end
   end
 
