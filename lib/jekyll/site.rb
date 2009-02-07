@@ -38,7 +38,6 @@ module Jekyll
       else
         self.settings = {}
       end
-      puts "Setting is now #{self.settings}"
     end
     
     # Read all the files in <source>/_layouts except backup files
@@ -161,14 +160,12 @@ module Jekyll
     #                     "categories" => [<Post>],
     #                     "topics" => [<Post>] }}
     def site_payload
-      r = {"site" => self.settings.merge({
+      {"site" => self.settings.merge({
         "time" => Time.now, 
         "posts" => self.posts.sort { |a,b| b <=> a },
         "categories" => post_attr_hash('categories'),
         "topics" => post_attr_hash('topics')
       })}
-      puts "payload #{r}"
-      r
     end
 
     # Filter out any files/directories that are hidden or backup files (start
