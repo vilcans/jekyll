@@ -15,12 +15,24 @@ module Jekyll
       posts = 0
       doc.elements.each("rss/channel/item") do |item|
         link = item.elements["link"].text
+
+        # Use the URL after the last slash as the post's name
         name = link.split("/")[-1]
+        
+        # Remove html extension
         name = $1 if name =~ /(.*)\.html/
+
+        # Remove the leading digits and dash that Serendipity adds
         name = $1 if name =~ /\d+\-(.*)/
 
-        #title = item.elements["title"].text
-        content = item.elements["content:encoded"].text
+        title = item.elements["title"].text
+
+        content_element = (item.elements["content:encoded"] or item.elements["description"])
+        unless content_element
+          puts "No content in RSS item '#{name}'\n"
+          next
+        end
+        content = content_element.text
         timestamp = Time.parse(item.elements["pubDate"].text)
         filename = "_posts/#{timestamp.strftime("%Y-%m-%d")}-#{name}.html"
         puts "#{link} -> #{filename}"
@@ -29,7 +41,7 @@ module Jekyll
             {
               "layout" => "post",
               "name" => name,
-              "title" => item.elements["title"].text,
+              "title" => title,
               "time" => timestamp,
             },
             f
