@@ -463,6 +463,21 @@ The hostname defaults to _localhost_, all other variables are needed
 You may need to adjust the code used to filter entries. Left alone,
 it will attempt to pull all entries that are live or sticky.
 
+h3. RSS
+
+You can import posts from the content of an RSS feed. Since all blog engines should be able to publish an RSS feed, this
+works independently of your blog engine. Hopefully your blog engine has an option to include all posts in the feed, and not
+just the latest ones.
+
+Save the RSS feed as _feed.xml_ and run the following command:
+
+  $ ruby -r './lib/jekyll/converters/rss' -e 'Jekyll::RSS.process("feed.xml")'
+
+This creates files in html format in the _posts directory.
+
+I have tested this on my "Serendipity":http://s9y.org/ feed and a random "Blogger":http://blogger.com feed.
+You may need to improve it to be able to handle your feed.
+
 h2. Contribute
 
 If you'd like to hack on Jekyll, start by forking my repo on GitHub:
