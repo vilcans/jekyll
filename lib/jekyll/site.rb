@@ -218,13 +218,13 @@ module Jekyll
     #                     "tags" => [<Post>],
     #                     "topics" => [<Post>] }}
     def site_payload
-      {"site" => {
+      {"site" => self.config.merge({
         "time" => Time.now,
         "posts" => self.posts.sort { |a,b| b <=> a },
         "categories" => post_attr_hash('categories'),
         "tags" => post_attr_hash('tags'),
         "topics" => post_attr_hash('topics')
-      }}
+      })}
     end
 
     # Filter out any files/directories that are hidden or backup files (start
