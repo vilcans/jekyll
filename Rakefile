@@ -3,6 +3,7 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 begin
+  gem 'jeweler', '>= 0.11.0'
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = "jekyll"
@@ -12,6 +13,8 @@ begin
     s.description = "Jekyll is a simple, blog aware, static site generator."
     s.authors = ["Tom Preston-Werner"]
     s.rubyforge_project = "jekyll"
+    s.files.exclude 'test/dest'
+    s.test_files.exclude 'test/dest'
     s.add_dependency('RedCloth', '>= 4.0.4')
     s.add_dependency('liquid', '>= 1.9.0')
     s.add_dependency('classifier', '>= 1.3.1')
@@ -20,7 +23,8 @@ begin
     s.add_dependency('open4', '>= 0.9.6')
   end
 rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+  puts "Jeweler not available. Install it with: sudo gem install jeweler --version '>= 0.11.0'"
+  exit(1)
 end
 
 Rake::TestTask.new do |t|
@@ -47,7 +51,7 @@ begin
 rescue LoadError
 end
 
-task :default => :test
+task :default => [:test, :features]
 
 # console
 
@@ -70,5 +74,18 @@ namespace :convert do
   desc "Migrate from Typo in the current directory"
   task :typo do
     sh %q(ruby -r './lib/jekyll/converters/typo' -e 'Jekyll::Typo.process("#{ENV["DB"]}", "#{ENV["USER"]}", "#{ENV["PASS"]}")')
+  end
+end
+
+begin
+  require 'cucumber/rake/task'
+
+  Cucumber::Rake::Task.new(:features) do |t|
+    t.cucumber_opts = "--format pretty"
+  end
+rescue LoadError
+  desc 'Cucumber rake task not available'
+  task :features do
+    abort 'Cucumber rake task is not available. Be sure to install cucumber as a gem or plugin'
   end
 end

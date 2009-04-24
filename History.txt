@@ -1,4 +1,4 @@
-==
+== 0.5.0 / 2009-04-07
   * Minor Enhancements
     * Ability to set post categories via YAML [github.com/qrush]
     * Ability to set prevent a post from publishing via YAML [github.com/qrush]
@@ -13,6 +13,8 @@
     * Prevent _posts from being copied to the destination directory [github.com/bdimcheff]
   * Refactors
     * Factored the filtering code into a method [github.com/Chrononaut]
+    * Fix tests and convert to Shoulda [github.com/qrush, github.com/technicalpickles]
+    * Add Cucumber acceptance test suite [github.com/qrush, github.com/technicalpickles]
 
 == 0.4.1
   * Minor Enhancements
