@@ -19,7 +19,7 @@ module Jekyll
     end
 
     attr_accessor :site
-    attr_accessor :date, :slug, :ext, :categories, :topics, :published
+    attr_accessor :date, :slug, :ext, :categories, :tags, :topics, :published
     attr_accessor :data, :content, :output
 
     # Initialize this Post instance.
@@ -27,6 +27,7 @@ module Jekyll
     #   +base+ is the String path to the dir containing the post file
     #   +name+ is the String filename of the post file
     #   +categories+ is an Array of Strings for the categories for this post
+    #   +tags+ is an Array of Strings for the tags for this post
     #
     # Returns <Post>
     def initialize(site, source, dir, name)
@@ -61,6 +62,8 @@ module Jekyll
           end
         end
       end
+
+      self.tags = self.data['tags'] || []
     end
 
     # Spaceship is based on Post#date
@@ -196,6 +199,7 @@ module Jekyll
         "categories" => self.categories,
         "next" => self.next,
         "previous" => self.previous,
+        "tags" => self.tags,
         "content" => self.content }.deep_merge(self.data)
     end
 

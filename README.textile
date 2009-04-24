@@ -249,6 +249,9 @@ h3. Site
   site.categories.CATEGORY
     The list of all Posts in category CATEGORY.
 
+  site.tags.TAG
+    The list of all Posts tagged TAG.
+
 h3. Post
 
   post.title
@@ -276,6 +279,10 @@ h3. Post
     structure beneath the _posts directory. For example, a post at
     /_posts/music/metal/2008-12-24-metalocalypse.textile would have this field
     set to ['music', 'metal'].
+
+  post.tags
+    The list of tags on this post. Tags are much like topics, but can only be
+    specified in the YAML part of a post, and are not reflected in the URL.
 
   post.content
     The content of the Post.
@@ -318,6 +325,9 @@ h3. Predefined Post Variables
     Instead of placing posts inside of folders, you can specify one or more
     categories that the post belongs to. When the site is generated the post
     will act as though it had been set with these categories normally.
+
+  tags
+    Similar to categories and topics but not reflected in the URL.
 
 h3. Custom Variables
 
@@ -449,6 +459,10 @@ within a Liquid template as follows:
 This would list all the posts in the category 'foo' by date and title.
 
 The posts within each category are sorted in reverse chronological order.
+
+h2. Tags
+
+Tags are like categories or topics but not reflected in the URL.
 
 h2. Blog migrations
 
