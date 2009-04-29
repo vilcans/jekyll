@@ -130,7 +130,7 @@ module Jekyll
         "year"       => date.strftime("%Y"),
         "month"      => date.strftime("%m"),
         "day"        => date.strftime("%d"),
-        "title"      => slug,
+        "title"      => CGI.escape(slug),
         "categories" => categories.sort.join('/')
       }.inject(template) { |result, token|
         result.gsub(/:#{token.first}/, token.last)
@@ -191,7 +191,8 @@ module Jekyll
     def write(dest)
       FileUtils.mkdir_p(File.join(dest, dir))
 
-      path = File.join(dest, self.url)
+      # The url needs to be unescaped in order to preserve the correct filename
+      path = File.join(dest, CGI.unescape(self.url))
 
       if template[/\.html$/].nil?
         FileUtils.mkdir_p(path)
