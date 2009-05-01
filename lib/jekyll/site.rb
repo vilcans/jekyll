@@ -1,7 +1,7 @@
 module Jekyll
 
   class Site
-    attr_accessor :config, :layouts, :posts, :categories, :tags
+    attr_accessor :config, :layouts, :posts, :categories, :tags, :exclude
     attr_accessor :source, :dest, :lsi, :pygments, :permalink_style
 
     # Initialize the site
@@ -16,6 +16,7 @@ module Jekyll
       self.lsi             = config['lsi']
       self.pygments        = config['pygments']
       self.permalink_style = config['permalink'].to_sym
+      self.exclude         = config['exclude'] || []
 
       self.reset
       self.setup
@@ -233,11 +234,9 @@ module Jekyll
     def filter_entries(entries)
       entries = entries.reject do |e|
         unless ['_posts', '.htaccess'].include?(e)
-          # Reject backup/hidden
-          ['.', '_', '#'].include?(e[0..0]) or e[-1..-1] == '~'
+          ['.', '_', '#'].include?(e[0..0]) || e[-1..-1] == '~' || self.exclude.include?(e)
         end
       end
     end
-
   end
 end
