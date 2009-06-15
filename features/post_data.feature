@@ -70,6 +70,17 @@ Feature: Post data
     Then the _site directory should exist
     And I should see "Post category: movies" in "_site/movies/2009/03/27/star-wars.html"
 
+  Scenario: Use post.tags variable
+    Given I have a _posts directory
+    And I have a _layouts directory
+    And I have the following post:
+      | title     | date      | layout | tag   | content                 |
+      | Star Wars | 5/18/2009 | simple | twist | Luke, I am your father. |
+    And I have a simple layout that contains "Post tags: {{ site.posts.first.tags }}"
+    When I run jekyll
+    Then the _site directory should exist
+    And I should see "Post tags: twist" in "_site/2009/05/18/star-wars.html"
+
   Scenario: Use post.categories variable when categories are in folders
     Given I have a movies directory
     And I have a movies/scifi directory
@@ -104,19 +115,6 @@ Feature: Post data
     When I run jekyll
     Then the _site directory should exist
     And I should see "Post categories: movies and scifi" in "_site/movies/scifi/2009/03/27/star-wars.html"
-
-  Scenario: Use post.topics variable
-    Given I have a _posts directory
-    And I have a _posts/movies directory
-    And I have a _posts/movies/scifi directory
-    And I have a _layouts directory
-    And I have the following post under "movies/scifi":
-      | title     | date      | layout | content                 |
-      | Star Wars | 3/27/2009 | simple | Luke, I am your father. |
-    And I have a simple layout that contains "Post topics: {{ site.posts.first.topics | array_to_sentence_string }}"
-    When I run jekyll
-    Then the _site directory should exist
-    And I should see "Post topics: movies and scifi" in "_site/2009/03/27/star-wars.html"
 
   Scenario: Disable a post from being published
     Given I have a _posts directory

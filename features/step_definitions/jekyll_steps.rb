@@ -57,7 +57,7 @@ Given /^I have the following posts?(?: (.*) "(.*)")?:$/ do |direction, folder, t
     path = File.join(before || '.', '_posts', after || '.', "#{date}-#{title}.#{post['type'] || 'textile'}")
 
     matter_hash = {}
-    %w(title layout tags category categories published author).each do |key|
+    %w(title layout tag tags category categories published author).each do |key|
       matter_hash[key] = post[key] if post[key]
     end
     matter = matter_hash.map { |k, v| "#{k}: #{v}\n" }.join.chomp
@@ -115,6 +115,10 @@ Then /^the (.*) directory should exist$/ do |dir|
   assert File.directory?(dir)
 end
 
+Then /^the (.*) file should exist$/ do |file|
+  assert File.file?(file)
+end
+
 Then /^I should see "(.*)" in "(.*)"$/ do |text, file|
   assert_match Regexp.new(text), File.open(file).readlines.join
 end
@@ -124,10 +128,9 @@ Then /^the "(.*)" file should not exist$/ do |file|
 end
 
 Then /^I should see today's time in "(.*)"$/ do |file|
-  assert_match Regexp.new(Time.now.to_s), File.open(file).readlines.join
+  assert_match Regexp.new(Regexp.escape(Time.now.to_s)), File.open(file).readlines.join
 end
 
 Then /^I should see today's date in "(.*)"$/ do |file|
   assert_match Regexp.new(Date.today.to_s), File.open(file).readlines.join
 end
-

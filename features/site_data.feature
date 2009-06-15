@@ -10,7 +10,7 @@ Feature: Site data
     And I should see "Contact: email@me.com" in "_site/contact.html"
 
   Scenario: Use site.time variable
-    Given I have an "index.html" page that contains "Generated on: {{ site.time }}"
+    Given I have an "index.html" page that contains "{{ site.time }}"
     When I run jekyll
     Then the _site directory should exist
     And I should see today's time in "_site/index.html"
@@ -49,3 +49,13 @@ Feature: Site data
     When I run jekyll
     Then the _site directory should exist
     And I should see "Awesome Hack" in "_site/index.html"
+
+  Scenario: Use site.tags variable
+    Given I have a _posts directory
+    And I have an "index.html" page that contains "{% for post in site.tags.beer %} {{ post.content }} {% endfor %}"
+    And I have the following posts:
+      | title          | date      | tag  | content            |
+      | Delicious Beer | 3/26/2009 | beer | 1) Yuengling       |
+    When I run jekyll
+    Then the _site directory should exist
+    And I should see "Yuengling" in "_site/index.html"

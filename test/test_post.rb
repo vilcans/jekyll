@@ -25,7 +25,6 @@ class TestPost < Test::Unit::TestCase
       assert !Post.valid?("blah")
     end
 
-
     context "processing posts" do
       setup do
         @post = Post.allocate
@@ -212,6 +211,18 @@ class TestPost < Test::Unit::TestCase
         assert post.categories.include?('baz')
       end
 
+      should "recognize tag in yaml" do
+        post = setup_post("2009-05-18-tag.textile")
+        assert post.tags.include?('code')
+      end
+
+      should "recognize tags in yaml" do
+        post = setup_post("2009-05-18-tags.textile")
+        assert post.tags.include?('food')
+        assert post.tags.include?('cooking')
+        assert post.tags.include?('pizza')
+      end
+
       context "rendering" do
         setup do
           clear_dest
@@ -262,7 +273,6 @@ class TestPost < Test::Unit::TestCase
     should "generate categories and topics" do
       post = Post.new(@site, File.join(File.dirname(__FILE__), *%w[source]), 'foo', 'bar/2008-12-12-topical-post.textile')
       assert_equal ['foo'], post.categories
-      assert_equal ['bar'], post.topics
     end
 
   end
