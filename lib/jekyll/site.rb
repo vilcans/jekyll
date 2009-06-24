@@ -77,6 +77,8 @@ module Jekyll
           rescue LoadError
             puts "The maruku gem is required for markdown support!"
           end
+        else
+          raise "Invalid Markdown processor: '#{self.config['markdown']}' -- did you mean 'maruku' or 'rdiscount'?"
       end
     end
 
@@ -250,13 +252,11 @@ module Jekyll
     #                   "next_page" => <Number> }}
     def paginate_posts(file, dir)
       all_posts = self.posts.sort { |a,b| b <=> a }
-      page = Page.new(self, self.source, dir, file)
-
       pages = Pager.calculate_pages(all_posts, self.config['paginate'].to_i)
-
+      pages += 1
       (1..pages).each do |num_page|
         pager = Pager.new(self.config, num_page, all_posts, pages)
-
+        page = Page.new(self, self.source, dir, file)
         page.render(self.layouts, site_payload.merge({'paginator' => pager.to_hash}))
         suffix = "page#{num_page}" if num_page > 1
         page.write(self.dest, suffix)
