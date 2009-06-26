@@ -25,6 +25,7 @@ require 'jekyll/post'
 require 'jekyll/filters'
 require 'jekyll/tags/highlight'
 require 'jekyll/tags/include'
+require 'jekyll/tags/image'
 require 'jekyll/albino'
 
 module Jekyll
