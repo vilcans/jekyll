@@ -24,3 +24,12 @@ Feature: Image tag
     And the _site/test_20x10.png file should exist
     And the _site/test.png file should exist
 
+  Scenario: Use image tag template
+    Given I have an "index.html" page that contains "{% image test.png max_height=10 %}"
+    And I have an 100x50 image file "test.png"
+    And I have an _includes directory
+    And I have an "_includes/image.html" file that contains "{{image.name}} {{image.width}} {{image.height}} {{original.name}} {{original.width}} {{original.height}}"
+    And I have a configuration file with "image_include" set to "image.html"
+    When I run jekyll
+    Then I should see "/test_20x10.png 20 10 /test.png 100 50" in "_site/index.html"
+

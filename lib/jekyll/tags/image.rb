@@ -25,7 +25,8 @@ module Jekyll
     end
 
     def render(context)
-      src_base = context.registers[:site].source
+      site = context.registers[:site]
+      src_base = site.source
       path = File.join(src_base, @file)
       if not File.exist?(path)
         return "<strong>File #{path} not found</strong>"
@@ -33,10 +34,10 @@ module Jekyll
 
       image = Magick::ImageList.new(path).first
 
-      width, height = image.columns, image.rows
+      original_width, original_height = image.columns, image.rows
+      width, height = original_width, original_height
       if ((@max_width and width > @max_width) or
         (@max_height and height > @max_height))
-        #puts "needs to scale"
         scaled = image.resize_to_fit(@max_width || width, @max_height || height)
         extension = File.extname(@file)
         width, height = scaled.columns, scaled.rows
@@ -44,11 +45,27 @@ module Jekyll
         file_to_write = File.join(context.registers[:site].dest, scaled_name)
         FileUtils.mkdir_p File.dirname(file_to_write)
         scaled.write file_to_write
-        src_name = scaled_name
+        src_name = '/' + scaled_name
       else
-        src_name = @file
+        src_name = '/' + @file
       end
-      return %Q(<img src="/#{src_name}" width="#{width}" height="#{height}" />)
+
+      if site.config.has_key?('image_include')
+        # TODO: Secure this. Do not allow reading files outside _includes 
+        source = File.read(File.join(context.registers[:site].source, '_includes', site.config['image_include']))
+        partial = Liquid::Template.parse(source)
+        context.stack do
+          context['image'] = {
+            'name' => src_name, 'width' => width, 'height' => height
+          }
+          context['original'] = {
+            'name' => '/' + @file, 'width' => original_width, 'height' => original_height
+          }
+          partial.render(context)
+        end
+      else
+        %Q(<img src="#{src_name}" width="#{width}" height="#{height}" />)
+      end
     end
   end
 
