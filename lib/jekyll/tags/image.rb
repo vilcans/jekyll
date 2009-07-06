@@ -41,11 +41,14 @@ module Jekyll
 
       image = Magick::ImageList.new(path).first
 
+      max_width = @max_width || site.config['image_max_width']
+      max_height = @max_height || site.config['image_max_height']
+
       original_width, original_height = image.columns, image.rows
       width, height = original_width, original_height
-      if ((@max_width and width > @max_width) or
-        (@max_height and height > @max_height))
-        scaled = image.resize_to_fit(@max_width || width, @max_height || height)
+      if ((max_width and width > max_width) or
+        (max_height and height > max_height))
+        scaled = image.resize_to_fit(max_width || width, max_height || height)
         extension = File.extname(@file)
         width, height = scaled.columns, scaled.rows
         scaled_name = "#{@file[0...-extension.length]}_#{width}x#{height}#{extension}"
