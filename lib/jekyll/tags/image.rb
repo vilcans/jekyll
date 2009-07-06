@@ -11,8 +11,15 @@ module Jekyll
       super
 
       args = markup.strip.split /\s+/
-      @file = args.shift
-      
+      file = args.shift
+      if file =~ /^\/+(.*)/
+        # Absolute image path; remove leading slashes
+        @file = $1
+      else
+        # TODO: make path relative to post
+        @file = file
+      end
+
       # Handle key=value arguments.
       # TODO: is there a standard way to implement keyword arguments in tags?
       args.each do |arg|

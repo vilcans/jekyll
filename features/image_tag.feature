@@ -33,3 +33,8 @@ Feature: Image tag
     When I run jekyll
     Then I should see "/test_20x10.png 20 10 /test.png 100 50" in "_site/index.html"
 
+  Scenario: Absolute image path
+    Given I have an "index.html" page that contains "{% image /test.png %}"
+    And I have an 8x8 image file "test.png"
+    When I run jekyll
+    Then I should see "<img src=\"/test.png\" width=\"8\" height=\"8\" />" in "_site/index.html"
