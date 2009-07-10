@@ -91,7 +91,7 @@ module Jekyll
 
       # The url needs to be unescaped in order to preserve the correct filename
       path = File.join(dest, CGI.unescape(self.url))
-      if self.url[/\.html$/].nil?
+      if self.url =~ /\/$/
         FileUtils.mkdir_p(path)
         path = File.join(path, "index.html")
       end

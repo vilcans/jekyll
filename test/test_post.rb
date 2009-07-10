@@ -266,9 +266,9 @@ class TestPost < Test::Unit::TestCase
           assert File.exists?(File.join(dest_dir, '2008', '10', '18', 'foo-bar.html'))
         end
 
-        should "write properly without html extension" do
+        should "write index.html when permalink ends with slash" do
           post = setup_post("2008-10-18-foo-bar.textile")
-          post.site.permalink_style = ":title"
+          post.site.permalink_style = ":title/"
           do_render(post)
           post.write(dest_dir)
 
