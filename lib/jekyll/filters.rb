@@ -31,6 +31,28 @@ module Jekyll
       return input.gsub(/(["'\\])/, '\\\\\1')
     end
 
+    # Create a valid NCName from a string.
+    # NCNames are used in the id attribute in HTML and XML.
+    # Invalid characters are converted to hexadecimal codes.
+    # It is not a proper escaping since it's not safely reversible.
+    #
+    # NCNames may only contain the following characters:
+    #
+    # Letter | "_" | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
+    #
+    # and the first character must be a letter or underscore.
+    #
+    # To be safe, this filter also removes non-ascii characters even
+    # though any letter is allowed in the standard.
+    def ncname(input)
+      input \
+        .sub(/^([^a-zA-Z_])/, '_\1') \
+        .sub(/\s/, '-') \
+        .gsub(/([^a-zA-Z0-9_.\-]+)/n) do
+        '_' + $1.unpack('H2' * $1.size).join('').upcase
+      end
+    end
+
     def number_of_words(input)
       input.split.length
     end
