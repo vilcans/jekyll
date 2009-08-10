@@ -33,17 +33,17 @@ Feature: Embed filters
     Then the _site directory should exist
     And I should see "\'\"\\" in "_site/string-escaping.js"
 
-  Scenario: Clean a string so it can be used as an NCName (e.g. as id attribute in html)
-    Given I have an "valid.html" page that contains "{{ "abcdef" | ncname }}"
-    And I have an "first_char_invalid.html" page that contains "{{ "36" | ncname }}"
-    And I have an "invalid.html" page that contains "{{ "abc123+\@%._-z" | ncname }}"
-    And I have an "spaces.html" page that contains "{{ "hello there" | ncname }}"
+  Scenario: Clean a string so it can be used as an id attribute in html
+    Given I have an "valid.html" page that contains "{{ "abcdef" | html_id }}"
+    And I have an "first_char_invalid.html" page that contains "prefix{{ "36" | to_id }}"
+    And I have an "invalid.html" page that contains "{{ "abc123+\@%:._-z" | to_id }}"
+    And I have an "spaces.html" page that contains "{{ "ladies and/or gentlemen" | to_id }}"
     When I run jekyll
     Then the _site directory should exist
     And I should see "abcdef" in "_site/valid.html"
-    And I should see "_36" in "_site/first_char_invalid.html"
-    And I should see "abc123_2B5C4025._-z" in "_site/invalid.html"
-    And I should see "hello-there" in "_site/spaces.html"
+    And I should see "prefix36" in "_site/first_char_invalid.html"
+    And I should see "abc123_2B5C40253A._-z" in "_site/invalid.html"
+    And I should see "ladies-and-or-gentlemen" in "_site/spaces.html"
 
   Scenario: Calculate number of words
     Given I have a _posts directory

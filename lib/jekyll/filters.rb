@@ -31,23 +31,26 @@ module Jekyll
       return input.gsub(/(["'\\])/, '\\\\\1')
     end
 
-    # Create a valid NCName from a string.
-    # NCNames are used in the id attribute in HTML and XML.
-    # Invalid characters are converted to hexadecimal codes.
+    # Create a valid HTML id attribute from a string.
+    #
+    # According to the HTML4 spec (http://www.w3.org/TR/html4/types.html#h-6.2):
+    # "ID and NAME tokens must begin with a letter ([A-Za-z]) and may be followed
+    # by any number of letters, digits ([0-9]), hyphens ("-"), underscores ("_"),
+    # colons (":"), and periods (".")."
+    #
+    # Also, colons are not allowed in XML, so we consider them invalid too.
+    #
+    # This filter "escapes" invalid character as hexadecimal codes.
     # It is not a proper escaping since it's not safely reversible.
     #
-    # NCNames may only contain the following characters:
+    # NOTE: We do not ensure that the first character of the string
+    # is a letter. You can make sure that the string begins with a letter
+    # by adding a prefix, e.g.:
     #
-    # Letter | "_" | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
-    #
-    # and the first character must be a letter or underscore.
-    #
-    # To be safe, this filter also removes non-ascii characters even
-    # though any letter is allowed in the standard.
-    def ncname(input)
+    #     <a id="tag-{{ t | html_id }}">...
+    def to_id(input)
       input \
-        .sub(/^([^a-zA-Z_])/, '_\1') \
-        .sub(/\s/, '-') \
+        .gsub(/[\s\/]/, '-') \
         .gsub(/([^a-zA-Z0-9_.\-]+)/n) do
         '_' + $1.unpack('H2' * $1.size).join('').upcase
       end
