@@ -25,6 +25,14 @@ Feature: Embed filters
     Then the _site directory should exist
     And I should see "Star &amp; Wars" in "_site/2009/03/27/star-wars.html"
 
+  Scenario: Escape Javascript string literal
+    Given I have an "string-escaping.js" page that contains "'"\"
+    And I have a _layouts directory
+    And I have a default layout that contains "{{ content | string_escape }}"
+    When I run jekyll
+    Then the _site directory should exist
+    And I should see "\'\"\\" in "_site/string-escaping.js"
+
   Scenario: Calculate number of words
     Given I have a _posts directory
     And I have a _layouts directory

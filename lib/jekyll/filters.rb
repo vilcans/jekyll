@@ -25,6 +25,12 @@ module Jekyll
       CGI::escape(input)
     end
 
+    # Escape quote chars and backslash in a string
+    # so it can be used in a Javascript string literal.
+    def string_escape(input)
+      return input.gsub(/(["'\\])/, '\\\\\1')
+    end
+
     def number_of_words(input)
       input.split.length
     end
