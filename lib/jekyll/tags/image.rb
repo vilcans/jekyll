@@ -3,7 +3,7 @@ module Jekyll
   require 'rubygems'
   require 'RMagick'
 
-  ATTRIBUTES = %w(max_width max_height)
+  ATTRIBUTES = %w(max_width max_height css_class)
 
   class ImageTag < Liquid::Tag
 
@@ -25,10 +25,12 @@ module Jekyll
       args.each do |arg|
         key, value = arg.split('=', 2)
         unless ATTRIBUTES.include? key
-          raise SyntaxError.new("Syntax Error in 'image' - Valid syntax: image <file> [max_width=x max_height=y]")
+          raise SyntaxError.new("Syntax Error in 'image' - Valid syntax: image <file> [max_width=x max_height=y css_class=zzz]")
         end
-        instance_variable_set "@#{key}", value.to_i
+        instance_variable_set "@#{key}", value
       end
+      @max_width = @max_width && @max_width.to_i
+      @max_height = @max_height && @max_height.to_i
     end
 
     def render(context)
@@ -65,6 +67,7 @@ module Jekyll
         source = File.read(File.join(context.registers[:site].source, '_includes', site.config['image_include']))
         partial = Liquid::Template.parse(source)
         context.stack do
+          context['css_class'] = @css_class
           context['image'] = {
             'name' => src_name, 'width' => width, 'height' => height
           }
@@ -73,8 +76,10 @@ module Jekyll
           }
           partial.render(context)
         end
+      elsif @css_class
+        %Q(<img src="#{src_name}" width="#{width}" height="#{height}" class="#{@css_class}"/>)
       else
-        %Q(<img src="#{src_name}" width="#{width}" height="#{height}" />)
+        %Q(<img src="#{src_name}" width="#{width}" height="#{height}"/>)
       end
     end
   end

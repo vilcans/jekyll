@@ -52,3 +52,9 @@ Feature: Image tag
     And I have a configuration file with "image_max_height" set to "10"
     When I run jekyll
     Then I should see "<img src=\"/test_20x10.png\" width=\"20\" height=\"10\" />" in "_site/index.html"
+
+  Scenario: Class attribute
+    Given I have an "index.html" page that contains "{% image test.png class="foo" %}"
+    And I have an 8x8 image file "test.png"
+    When I run jekyll
+    Then I should see "<img src=\"/test.png\" width=\"8\" height=\"8\" class=\"foo\"/>" in "_site/index.html"
